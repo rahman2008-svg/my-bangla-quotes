@@ -1,35 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
-<meta charset="UTF-8">
-<title>Bangla-English Dictionary</title>
-<style>
-body { font-family: Arial, sans-serif; margin: 40px; }
-input { padding: 10px; width: 300px; font-size: 16px; }
-#result { margin-top: 20px; font-size: 18px; color: #333; }
-</style>
+    <meta charset="UTF-8">
+    <title>Bangla Quotes</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; margin: 20px; background: #fdf6e3; }
+        h1 { text-align: center; color: #d35400; }
+        .quote { 
+            margin: 10px 0; 
+            padding: 15px; 
+            background: #ffe4b5; 
+            border-left: 5px solid #d35400; 
+            border-radius: 5px; 
+            box-shadow: 1px 2px 5px rgba(0,0,0,0.2); 
+            font-size: 18px;
+        }
+        .quote:nth-child(even) { background: #ffd699; }
+    </style>
 </head>
 <body>
-<h1>Bangla-English Dictionary</h1>
-<input type="text" id="search" placeholder="Search word..." />
-<div id="result"></div>
+    <h1>🌸 Bangla Quotes 🌸</h1>
+    <div id="quotes-container">Loading quotes...</div>
 
-<script>
-let dictionary = {};
-
-fetch('dictionary.json')
-  .then(response => response.json())
-  .then(data => dictionary = data)
-  .catch(err => document.getElementById('result').innerText = "Error loading dictionary");
-
-document.getElementById('search').addEventListener('input', function() {
-  const word = this.value.trim().toLowerCase();
-  if(word in dictionary) {
-    document.getElementById('result').innerText = dictionary[word];
-  } else {
-    document.getElementById('result').innerText = "Word not found";
-  }
-});
-</script>
+    <script>
+        fetch('quotes.json')
+        .then(response => response.json())
+        .then(quotes => {
+            const container = document.getElementById('quotes-container');
+            container.innerHTML = '';
+            quotes.forEach((quote, i) => {
+                const div = document.createElement('div');
+                div.className = 'quote';
+                div.textContent = `${i+1}. ${quote}`;
+                container.appendChild(div);
+            });
+        })
+        .catch(err => {
+            document.getElementById('quotes-container').textContent = 'Error loading quotes 😢';
+            console.error(err);
+        });
+    </script>
 </body>
 </html>
