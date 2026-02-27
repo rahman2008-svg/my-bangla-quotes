@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Bangla-English Dictionary</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 40px; }
+input { padding: 10px; width: 300px; font-size: 16px; }
+#result { margin-top: 20px; font-size: 18px; color: #333; }
+</style>
+</head>
+<body>
+<h1>Bangla-English Dictionary</h1>
+<input type="text" id="search" placeholder="Search word..." />
+<div id="result"></div>
+
+<script>
+let dictionary = {};
+
+fetch('dictionary.json')
+  .then(response => response.json())
+  .then(data => dictionary = data)
+  .catch(err => document.getElementById('result').innerText = "Error loading dictionary");
+
+document.getElementById('search').addEventListener('input', function() {
+  const word = this.value.trim().toLowerCase();
+  if(word in dictionary) {
+    document.getElementById('result').innerText = dictionary[word];
+  } else {
+    document.getElementById('result').innerText = "Word not found";
+  }
+});
+</script>
+</body>
+</html>
