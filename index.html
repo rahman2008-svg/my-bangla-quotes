@@ -1,120 +1,107 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bangla Quotes App 🌟</title>
-  <style>
-    body {
-      font-family: 'SolaimanLipi', sans-serif;
-      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-      margin: 0;
-      padding: 0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bangla Quotes 🌟</title>
+    <style>
+        body {
+            font-family: 'SolaimanLipi', Arial, sans-serif;
+            background: #f0f8ff;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
 
-    h1 {
-      text-align: center;
-      padding: 20px;
-      color: #343a40;
-    }
+        h1 {
+            color: #ff4500;
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-    #quotes-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 10px;
-    }
+        #quotes-container {
+            width: 100%;
+            max-width: 700px;
+        }
 
-    .quote-card {
-      background: #ffffff;
-      width: 90%;
-      max-width: 600px;
-      margin: 10px 0;
-      padding: 15px 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      font-size: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: transform 0.2s;
-    }
+        .quote {
+            background: #fff8dc;
+            border-left: 6px solid #ff4500;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            font-size: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    .quote-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 8px rgba(0,0,0,0.15);
-    }
+        .copy-btn {
+            background: #ff4500;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+        }
 
-    .copy-btn {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      padding: 6px 10px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background-color 0.2s;
-    }
+        .copy-btn:hover {
+            background: #ff6347;
+        }
 
-    .copy-btn:hover {
-      background-color: #0056b3;
-    }
-
-    @media (max-width: 600px) {
-      .quote-card {
-        font-size: 18px;
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .copy-btn {
-        margin-top: 10px;
-      }
-    }
-  </style>
+        footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
 </head>
 <body>
-  <h1>Bangla Quotes 🌟</h1>
-  <div id="quotes-container">
-    <!-- Quotes will appear here -->
-  </div>
 
-  <script>
-    async function loadQuotes() {
-      try {
-        const res = await fetch('quotes.json');
-        const data = await res.json();
-        const container = document.getElementById('quotes-container');
+    <h1>Bangla Quotes 🌟</h1>
+    <div id="quotes-container">
+        Loading quotes...
+    </div>
+    <footer>
+        Made with ❤️ by Prince AR Abdur Rahman
+    </footer>
 
-        data.forEach(item => {
-          const card = document.createElement('div');
-          card.className = 'quote-card';
+    <script>
+        // Load quotes from JSON file
+        fetch('quotes.json')
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('quotes-container');
+                container.innerHTML = '';
+                data.forEach(quote => {
+                    const quoteDiv = document.createElement('div');
+                    quoteDiv.className = 'quote';
 
-          const quoteText = document.createElement('span');
-          quoteText.textContent = item.quote;
+                    const textSpan = document.createElement('span');
+                    textSpan.textContent = quote;
 
-          const copyBtn = document.createElement('button');
-          copyBtn.className = 'copy-btn';
-          copyBtn.textContent = 'Copy';
-          copyBtn.onclick = () => {
-            navigator.clipboard.writeText(item.quote).then(() => {
-              copyBtn.textContent = 'Copied ✅';
-              setTimeout(() => copyBtn.textContent = 'Copy', 1000);
+                    const copyBtn = document.createElement('button');
+                    copyBtn.textContent = 'Copy';
+                    copyBtn.className = 'copy-btn';
+                    copyBtn.onclick = () => {
+                        navigator.clipboard.writeText(quote);
+                        alert('Copied ✅');
+                    };
+
+                    quoteDiv.appendChild(textSpan);
+                    quoteDiv.appendChild(copyBtn);
+                    container.appendChild(quoteDiv);
+                });
+            })
+            .catch(error => {
+                document.getElementById('quotes-container').textContent = 'Error loading quotes 😢';
+                console.error('Error loading quotes:', error);
             });
-          };
+    </script>
 
-          card.appendChild(quoteText);
-          card.appendChild(copyBtn);
-          container.appendChild(card);
-        });
-
-      } catch (err) {
-        console.error('Error loading quotes:', err);
-        document.getElementById('quotes-container').textContent = 'Error loading quotes 😢';
-      }
-    }
-
-    loadQuotes();
-  </script>
 </body>
 </html>
