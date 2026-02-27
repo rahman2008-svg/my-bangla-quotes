@@ -1,44 +1,120 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <title>Bangla Quotes</title>
-    <style>
-        body { font-family: 'Arial', sans-serif; margin: 20px; background: #fdf6e3; }
-        h1 { text-align: center; color: #d35400; }
-        .quote { 
-            margin: 10px 0; 
-            padding: 15px; 
-            background: #ffe4b5; 
-            border-left: 5px solid #d35400; 
-            border-radius: 5px; 
-            box-shadow: 1px 2px 5px rgba(0,0,0,0.2); 
-            font-size: 18px;
-        }
-        .quote:nth-child(even) { background: #ffd699; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bangla Quotes App 🌟</title>
+  <style>
+    body {
+      font-family: 'SolaimanLipi', sans-serif;
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      text-align: center;
+      padding: 20px;
+      color: #343a40;
+    }
+
+    #quotes-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+    }
+
+    .quote-card {
+      background: #ffffff;
+      width: 90%;
+      max-width: 600px;
+      margin: 10px 0;
+      padding: 15px 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      font-size: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: transform 0.2s;
+    }
+
+    .quote-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+    }
+
+    .copy-btn {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.2s;
+    }
+
+    .copy-btn:hover {
+      background-color: #0056b3;
+    }
+
+    @media (max-width: 600px) {
+      .quote-card {
+        font-size: 18px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .copy-btn {
+        margin-top: 10px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <h1>🌸 Bangla Quotes 🌸</h1>
-    <div id="quotes-container">Loading quotes...</div>
+  <h1>Bangla Quotes 🌟</h1>
+  <div id="quotes-container">
+    <!-- Quotes will appear here -->
+  </div>
 
-    <script>
-        fetch('quotes.json')
-        .then(response => response.json())
-        .then(quotes => {
-            const container = document.getElementById('quotes-container');
-            container.innerHTML = '';
-            quotes.forEach((quote, i) => {
-                const div = document.createElement('div');
-                div.className = 'quote';
-                div.textContent = `${i+1}. ${quote}`;
-                container.appendChild(div);
+  <script>
+    async function loadQuotes() {
+      try {
+        const res = await fetch('quotes.json');
+        const data = await res.json();
+        const container = document.getElementById('quotes-container');
+
+        data.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'quote-card';
+
+          const quoteText = document.createElement('span');
+          quoteText.textContent = item.quote;
+
+          const copyBtn = document.createElement('button');
+          copyBtn.className = 'copy-btn';
+          copyBtn.textContent = 'Copy';
+          copyBtn.onclick = () => {
+            navigator.clipboard.writeText(item.quote).then(() => {
+              copyBtn.textContent = 'Copied ✅';
+              setTimeout(() => copyBtn.textContent = 'Copy', 1000);
             });
-        })
-        .catch(err => {
-            document.getElementById('quotes-container').textContent = 'Error loading quotes 😢';
-            console.error(err);
+          };
+
+          card.appendChild(quoteText);
+          card.appendChild(copyBtn);
+          container.appendChild(card);
         });
-    </script>
+
+      } catch (err) {
+        console.error('Error loading quotes:', err);
+        document.getElementById('quotes-container').textContent = 'Error loading quotes 😢';
+      }
+    }
+
+    loadQuotes();
+  </script>
 </body>
 </html>
